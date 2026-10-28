@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- usesCleartextTraffic permite la URL local http://10.0.2.2:8080/ -->
+    <application
+        android:label="Denuncias"
+        android:theme="@style/Theme.Denuncias"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RegistrarActivity"
+            android:label="Nueva denuncia" />
+        <activity
+            android:name=".DetalleActivity"
+            android:label="Detalle de la denuncia" />
+    </application>
+</manifest>
