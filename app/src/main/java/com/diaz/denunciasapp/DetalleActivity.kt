@@ -1,6 +1,7 @@
 package com.diaz.denunciasapp
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -16,9 +17,10 @@ class DetalleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityDetalleBinding.inflate(layoutInflater)
         setContentView(b.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        b.btnAtender.isEnabled = false
         b.btnAtender.setOnClickListener { atender() }
+        b.btnVolver.setOnClickListener { finish() }
 
         lifecycleScope.launch {
             try {
@@ -29,17 +31,24 @@ class DetalleActivity : AppCompatActivity() {
         }
     }
 
+    // Flecha de la barra superior
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
     private fun mostrar(d: Denuncia) {
-        b.txtDetalle.text = """
-            Código: ${d.id}
-            DNI: ${d.dni}
-            Fecha: ${fechaCorta(d.fecha)}
-            Tipo: ${d.tipo}
-            Dirección: ${d.direccion}
-            Descripción: ${d.descripcion}
-            Estado: ${estadoTexto(d.estado)}
-        """.trimIndent()
-        b.btnAtender.isEnabled = d.estado == 1
+        b.txtTitulo.text = "#${d.id} · ${d.tipo}"
+        b.txtEstado.visibility = View.VISIBLE
+        b.txtEstado.pintarEstado(d.estado)
+        b.txtDni.text = d.dni
+        b.txtFecha.text = fechaCorta(d.fecha)
+        b.txtDireccion.text = d.direccion
+        b.txtDescripcion.text = d.descripcion
+
+        val pendiente = d.estado == 1
+        b.btnAtender.isEnabled = pendiente
+        b.btnAtender.text = if (pendiente) "Atender denuncia" else "Denuncia ya atendida"
     }
 
     private fun atender() {

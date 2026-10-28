@@ -1,0 +1,10 @@
+<resources>
+    <color name="fondo">#F4F6FA</color>
+    <color name="texto">#1F2937</color>
+    <color name="gris">#6B7280</color>
+    <color name="borde">#E2E8F0</color>
+    <color name="pendiente_fondo">#FFEDD5</color>
+    <color name="pendiente_texto">#9A3412</color>
+    <color name="atendida_fondo">#DCFCE7</color>
+    <color name="atendida_texto">#166534</color>
+</resources>

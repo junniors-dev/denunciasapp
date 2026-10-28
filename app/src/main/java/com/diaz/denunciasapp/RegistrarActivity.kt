@@ -1,7 +1,6 @@
 package com.diaz.denunciasapp
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -16,30 +15,37 @@ class RegistrarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityRegistrarBinding.inflate(layoutInflater)
         setContentView(b.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        b.spTipo.adapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_dropdown_item,
-            listOf("ROBO", "ASALTO", "VANDALISMO", "ACOSO", "OTRO")
-        )
+        b.txtTipo.setText("ROBO", false)
         b.btnGuardar.setOnClickListener { guardar() }
+        b.btnCancelar.setOnClickListener { finish() }
+    }
+
+    // Flecha de la barra superior
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     private fun guardar() {
         val dni = b.txtDni.text.toString().trim()
         val direccion = b.txtDireccion.text.toString().trim()
         val descripcion = b.txtDescripcion.text.toString().trim()
-        if (dni.length != 8 || direccion.isEmpty() || descripcion.isEmpty()) {
-            Toast.makeText(this, "Completa todo (el DNI tiene 8 dígitos)", Toast.LENGTH_SHORT).show()
-            return
-        }
+
+        b.tilDni.error = if (dni.length != 8) "El DNI tiene 8 dígitos" else null
+        b.tilDireccion.error = if (direccion.isEmpty()) "Escribe la dirección" else null
+        b.tilDescripcion.error = if (descripcion.isEmpty()) "Cuenta qué pasó" else null
+        if (b.tilDni.error != null || b.tilDireccion.error != null || b.tilDescripcion.error != null) return
 
         b.btnGuardar.isEnabled = false
+        b.btnGuardar.text = "Registrando…"
         lifecycleScope.launch {
             try {
                 val nueva = ApiClient.api.registrar(
                     Denuncia(
                         dni = dni,
-                        tipo = b.spTipo.selectedItem.toString(),
+                        tipo = b.txtTipo.text.toString(),
                         direccion = direccion,
                         descripcion = descripcion
                     )
@@ -49,6 +55,7 @@ class RegistrarActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 mostrarError(e)
                 b.btnGuardar.isEnabled = true
+                b.btnGuardar.text = "Registrar denuncia"
             }
         }
     }

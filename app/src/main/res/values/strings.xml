@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="tipos">
+        <item>ROBO</item>
+        <item>ASALTO</item>
+        <item>VANDALISMO</item>
+        <item>ACOSO</item>
+        <item>OTRO</item>
+    </string-array>
+</resources>
